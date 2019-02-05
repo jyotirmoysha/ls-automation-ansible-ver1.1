@@ -1,0 +1,35 @@
+#!/bin/bash
+# description: Wildfly Start Stop Restart Status
+# processname: Wildfly
+# chkconfig: 234 20 80
+START_STATUS="JBOSS / Wildfly service running."
+STOP_STATUS="JBOSS / Wildfly service stopped."
+PROC_NAME="standalone.sh"
+JBOSS_HOME="/{{serviceroot}}/{{ serviceuser }}/jboss-as/bin"
+start () {
+    su {{ serviceuser }} -c "cd $JBOSS_HOME; nohup sh standalone.sh > $JBOSS_HOME/run.log & &>/dev/null" ; echo "$START_STATUS"
+}
+stop () {
+        kill -9 `pgrep -f $PROC_NAME` &> /dev/null ; echo "$STOP_STATUS"
+}
+restart () {
+        stop
+        start
+}
+status () {
+        ps auxfww | grep -v grep | grep $PROC_NAME &> /dev/null
+                if [ $? -eq 0 ]
+        then
+                echo "$START_STATUS"
+        else
+                echo "$STOP_STATUS"
+                fi
+}
+case $1 in
+        start)   $1  ;;
+        stop)    $1  ;;
+        restart) $1  ;;
+        status)  $1  ;;
+        *) echo "Usage: $0 {start|stop|status|restart}"
+    esac
+exit 0

@@ -1,0 +1,5 @@
+---
+
+dependencies:
+  - {role: move-rage-files, when: "mode == 'setup' "}
+  - {role: wildfly, when: "mode == 'setup' "}

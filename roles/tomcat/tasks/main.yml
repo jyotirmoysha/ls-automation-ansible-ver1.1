@@ -1,0 +1,110 @@
+---
+
+- debug:
+    msg: Tomcat Setup
+
+- name: add group "rage"
+  group: name={{ serviceuser }}
+  become: true
+  become_method: sudo
+
+#- name: Create User
+#  action: user name={{ serviceuser }} password={{ password }} update_password=always shell=/bin/bash home=/{{serviceroot}}/{{ serviceuser }}
+#  become: true
+#  become_method: sudo
+
+- name: Extract JAVA 1.8.111
+  unarchive:
+    src: jdk-8u111-linux-x64.tar.gz
+    dest: /{{serviceroot}}/{{ serviceuser }}/
+    owner: "{{ serviceuser }}"
+    group: "{{ serviceuser }}"
+  become: true
+  become_method: sudo
+
+######## Added new for security
+- name: Copy file local_policy.jar specific to Rage to jdk
+  copy: src=local_policy.jar dest=/{{serviceroot}}/{{ serviceuser }}/jdk1.8.0_111/jre/lib/security  mode=0755
+  become: true
+  become_method: sudo
+
+- name: Copy file US_export_policy.jar specific to Rage to jdk
+  copy: src=US_export_policy.jar dest=/{{serviceroot}}/{{ serviceuser }}/jdk1.8.0_111/jre/lib/security  mode=0755
+  become: true
+  become_method: sudo
+
+######### End for security
+
+- command: "{{ item }}"
+  with_items:
+  - alternatives --install /usr/bin/java java /{{serviceroot}}/{{ serviceuser }}/jdk1.8.0_111/bin/java 2
+  - alternatives --set java /{{serviceroot}}/{{ serviceuser }}/jdk1.8.0_111/bin/java
+  become: true
+  become_method: sudo
+
+- template:
+     src: .bashrc.j2
+     dest: /{{serviceroot}}/{{ serviceuser }}/.bashrc
+     owner: "{{ serviceuser }}"
+     group: "{{ serviceuser }}"
+  become: true
+  become_method: sudo
+
+- name: Extract tomcat setup
+  unarchive:
+    src: apache-tomcat-8.0.39.tar.gz
+    dest: /{{serviceroot}}/{{ serviceuser }}
+    owner: "{{ serviceuser }}"
+    group: "{{ serviceuser }}"
+  become: true
+  become_method: sudo
+
+# give permission rights to bin folder (user: 07 (i.e. read, write and execute; group: 5(read & execute); other:5) )
+- file:
+    path: /{{serviceroot}}/{{ serviceuser }}/apache-tomcat-8.0.39/bin
+    mode: 0755
+    recurse: yes
+  become: true
+  become_method: sudo  
+
+- template:
+     src: tomcat.j2
+     dest: /etc/init.d/tomcat
+     mode: 0755
+  become: true
+  become_method: sudo  
+
+- name: Start services automatically at boot.
+  command: systemctl enable tomcat.service
+  become: true
+  become_method: sudo  
+
+##### Below code provides sudo access to tomcat services. Commented below, since it was locking existing user having sudo access
+#- lineinfile:
+#    path: /etc/sudoers
+#    state: present
+#    regexp: '^{{ serviceuser }}'
+#    line: '{{ serviceuser }} ALL=NOPASSWD: /sbin/service tomcat start,/sbin/service tomcat stop,/sbin/service tomcat restart,/sbin/service tomcat status'
+#    validate: '/usr/sbin/visudo -cf %s'
+#  become: true
+#  become_method: sudo  
+
+- name: Tomcat | Create log path
+  file:
+    path: /{{serviceroot}}/{{ serviceuser }}/apache-tomcat-8.0.39/logs
+    state: directory
+    owner: "{{ serviceuser }}"
+    group: "{{ serviceuser }}"
+  become: true
+  become_method: sudo 
+
+- name: Start Tomcat
+  command: service tomcat start
+  become: true
+#  become_user: rage
+  become_method: sudo 
+
+#- name: Start tomcat service
+#  service: name=tomcat state=started
+
+

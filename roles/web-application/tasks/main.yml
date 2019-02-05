@@ -1,0 +1,53 @@
+---
+
+- debug:
+    msg: Web Application Hello
+
+# move livespread war file to tomcat webapp folder
+#- name: Move Livespread war to tomcat root
+#  copy:
+#    src: LiveSpread.war
+#    dest: /home/{{ serviceuser }}/apache-tomcat-8.0.39/webapps
+#    owner: "{{ serviceuser }}"
+#    group: "{{ serviceuser }}"
+#  become: true
+#  become_method: sudo
+
+# move livespread war file to tomcat webapp folder
+- name: Move Livespread war to tomcat root
+  copy: src=LiveSpread.war dest=/home/{{ serviceuser }}/apache-tomcat-8.0.39/webapps  mode=0755
+#  copy: src=LiveSpread-SQL.war dest=/{{serviceroot}}/{{ serviceuser }}/apache-tomcat-8.0.39/webapps  mode=0755
+  become: true
+  become_method: sudo
+
+#- template:
+#     src:  input.properties
+#     dest: /home/{{ serviceuser }}/apache-tomcat-8.0.39/webapps
+#     mode: 0755
+#     notify: 
+#       - restart tomcat8
+#  become: true
+#  become_method: sudo
+
+- template:
+     src: input.properties
+     dest: /{{serviceroot}}/{{ serviceuser }}/apache-tomcat-8.0.39/webapps
+     owner: "{{ serviceuser }}"
+     group: "{{ serviceuser }}"
+  #notify: restart tomcat
+  become: true
+  become_method: sudo
+
+# provide permission rights
+- file:
+    path: /{{serviceroot}}/{{ serviceuser }}/apache-tomcat-8.0.39/webapps
+    mode: 0755
+    recurse: yes
+  become: true
+  become_method: sudo
+
+- name: Restart Tomcat
+  command: service tomcat restart
+  become: true
+#  become_user: rage
+  become_method: sudo 

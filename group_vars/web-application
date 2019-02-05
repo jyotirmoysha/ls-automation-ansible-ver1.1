@@ -1,0 +1,86 @@
+serviceuser: rage
+serviceroot: home
+password: R@ge1234 
+mode: setup
+
+#Variabls related to tomcat installation
+http_port: 8090
+https_port: 8443
+
+jdbcdriver: net.sourceforge.jtds.jdbc.Driver
+############################### variables for input.properties
+
+relationDatabaseType: SQL_SERVER
+jdbcDriver: com.microsoft.sqlserver.jdbc.SQLServerDriver
+hibernatedialect: com.rage.extendeddao.SQLServer2012Dialect
+databaseServerIp: LVSAPOC-DB.database.windows.net
+databaseServerPort: 1433
+
+#Application database details
+appDatabaseServerIp: LVSAPOC-DB.database.windows.net
+appDatabaseServerPort: 1433
+appDatabaseName: LIVESPREAD
+appDatabaseUserName: LIVESPREAD
+#appDatabasePassword: sd098dvHDS@#HGV
+#encrypted password below
+appDatabasePassword: 3vrXa+4W2iNWJMyxoMk5XQ==
+
+#UIC database details
+uicDatabaseServerIp: LVSAPOC-DB.database.windows.net
+uicDatabaseServerPort: 1433
+uicDatabaseName: UIC 
+uicDatabaseUserName: UIC
+#uicDatabasePassword: sdjv876vcDS@#HGV
+#encrypted password below
+uicDatabasePassword: TOC516Qz1TmjvW133POjFb2Ex63MtuJtIplDRuSUSe0=
+
+#RAGE database details
+rageDatabaseServerIp: LVSAPOC-DB.database.windows.net
+rageDatabaseServerPort: 1433
+rageDatabaseName: PLATFORM
+rageDatabaseUserName: PLATFORMDB
+#rageDatabasePassword: sdjv123vHDS@#HGV
+#encrypted password below
+rageDatabasePassword: K2nH553SySalYcO+3slB/L2Ex63MtuJtIplDRuSUSe0=
+
+#EMail Configuration properties
+clientSignUpLink: http://172.25.2.111:8080/LiveSpread/changePasswordByMail.htm
+mailSmtpFrom: LS.Support@genpact.com
+mailSmtpPwd: System#234
+mailSmtpCC: LS.Support@genpact.com
+mailSmtpPort: 25
+mailSmtpSslTrust: 58.2.248.28
+mailSmtpHost: 58.2.248.28
+
+#Application Configuration properties
+#secureFlag=; secure; httpOnly  ## for https
+#secureFlag=            ## for http 
+#secureFlag: ; secure; httpOnly
+secureFlag: false
+
+#LiveSpread-FS path
+homePathpath: /home/rage/LIVESPREAD-FS
+#homePathpath: /home/rage/LIVESPREAD-FS/LSSQL/dev
+APPLICATIONURLS: http://10.75.241.10:8080/LiveSpread
+#APPLICATIONURLS: http://10.163.1.11:8080/LiveSpread-SQL
+
+#Rage Configuration
+JbossCategory: LSV4_SERVER1
+rageApplicationId: 2434
+rageApplicationName: LIVESPREAD
+
+#Logs file details
+LogFilePath: /home/rage/LS_Branding/logs/appLogger.log
+
+########################### Parser Script: config.properties
+#jdbcdriver: net.sourceforge.jtds.jdbc.Driver
+
+databaseSourceUrl: jdbc:jtds:sqlserver://LVSAPOC-DB.database.windows.net:1433;databaseName=LIVESPREAD
+stagingUser: LIVESPREAD
+stagingPwd: sd098dvHDS@#HGV
+
+rageDatabaseSourceUrl: jdbc:jtds:sqlserver://LVSAPOC-DB.database.windows.net:1433;databaseName=PLATFORM
+rageUser: PLATFORMDB
+ragePwd: sdjv123vHDS@#HGV
+
+commonParserLog: Yes

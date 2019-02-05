@@ -1,0 +1,217 @@
+---
+
+- debug:
+    msg: Wildfly Setup
+
+- name: add group "rage"
+  group: name={{ serviceuser }}
+  become: true
+  become_method: sudo
+
+#- name: Create User
+#  action: user name={{ serviceuser }} password={{ password }} update_password=always shell=/bin/bash home=/{{serviceroot}}/{{ serviceuser }}
+#  become: true
+#  become_method: sudo
+
+- name: Extract JAVA 1.8.111
+  unarchive:
+    src: jdk-8u111-linux-x64.tar.gz
+    dest: /{{serviceroot}}/{{ serviceuser }}/
+    owner: "{{ serviceuser }}"
+    group: "{{ serviceuser }}"
+  become: true
+  become_method: sudo
+
+######## Added new for security
+- name: Copy file local_policy.jar specific to Rage to jdk
+  copy: src=local_policy.jar dest=/{{serviceroot}}/{{ serviceuser }}/jdk1.8.0_111/jre/lib/security  mode=0755
+  become: true
+  become_method: sudo
+
+- name: Copy file US_export_policy.jar specific to Rage to jdk
+  copy: src=US_export_policy.jar dest=/{{serviceroot}}/{{ serviceuser }}/jdk1.8.0_111/jre/lib/security  mode=0755
+  become: true
+  become_method: sudo
+
+######### End for security
+
+- command: "{{ item }}"
+  with_items:
+  - alternatives --install /usr/bin/java java /{{serviceroot}}/{{ serviceuser }}/jdk1.8.0_111/bin/java 2
+  - alternatives --set java /{{serviceroot}}/{{ serviceuser }}/jdk1.8.0_111/bin/java
+  become: true
+  become_method: sudo
+
+- template:
+     src: .bashrc.j2
+     dest: /{{serviceroot}}/{{ serviceuser }}/.bashrc
+     owner: "{{ serviceuser }}"
+     group: "{{ serviceuser }}"
+  become: true
+  become_method: sudo
+
+#- name: WildFly | Install
+#  include: install.yml
+#  tags:
+#    - install
+
+- name: Extract fresh widlfly setup
+  unarchive:
+    src: "{{wildflyartefactName}}"
+    #src: wildfly-10.1.0.Final_sqlserverv15.tar.gz
+    dest: /{{serviceroot}}/{{ serviceuser }}
+    owner: "{{ serviceuser }}"
+    group: "{{ serviceuser }}"
+  become: true
+  become_method: sudo
+
+# TODO: Need to comment below code, since wildfly setup is a folder. but later above archive code needs to be uncommented if its zip
+#- name: Copy folder wildfly-10.1.0.Final_sqlserverv15 to Rage server
+#  copy: src=wildfly-10.1.0.Final_sqlserverv15 dest=/home/{{ serviceuser }} mode=0755
+#  become: true
+#  become_method: sudo
+
+# Rename the dir to avoid encoding the version in the init script
+- name: Rename install directory to jboss
+  command: chdir=/{{serviceroot}}/{{ serviceuser }} /bin/mv {{wildflyfolderName}} jboss-as creates=/{{serviceroot}}/{{ serviceuser }}/jboss-as
+  become: true
+  become_method: sudo
+
+
+######################## Start
+
+#- name: Copy folder certificates to to wildfly
+#  copy: src=certificate dest=/{{serviceroot}}/{{ serviceuser }}/jboss-as owner={{ serviceuser }} group={{ serviceuser }} mode=0755
+#  become: true
+#  become_method: sudo
+
+- name: Extract certificates to wildfly
+  unarchive:
+    src: certificate.tar.gz
+    #src: wildfly-10.1.0.Final_sqlserverv15.tar.gz
+    dest: /{{serviceroot}}/{{ serviceuser }}/jboss-as
+    owner: "{{ serviceuser }}"
+    group: "{{ serviceuser }}"
+  become: true
+  become_method: sudo
+
+#- name: Copy folder deployments to to wildfly
+#  copy: src=deployments dest=/{{serviceroot}}/{{ serviceuser }}/jboss-as owner={{ serviceuser }} group={{ serviceuser }} mode=0755
+#  become: true
+#  become_method: sudo
+
+
+- name: Extract deployments to wildfly
+  unarchive:
+    src: deployments.tar.gz
+    #src: wildfly-10.1.0.Final_sqlserverv15.tar.gz
+    dest: /{{serviceroot}}/{{ serviceuser }}/jboss-as/standalone
+    owner: "{{ serviceuser }}"
+    group: "{{ serviceuser }}"
+  become: true
+  become_method: sudo
+
+#- name: Copy folder rage to to wildfly
+#  copy: src=rage dest=/{{serviceroot}}/{{ serviceuser }}/jboss-as/modules/system/layers/base owner={{ serviceuser }} group={{ serviceuser }} mode=0755
+#  become: true
+#  become_method: sudo
+
+- name: Extract rage to wildfly
+  unarchive:
+    src: rage.tar.gz
+    #src: wildfly-10.1.0.Final_sqlserverv15.tar.gz
+    dest: /{{serviceroot}}/{{ serviceuser }}/jboss-as/modules/system/layers/base
+    owner: "{{ serviceuser }}"
+    group: "{{ serviceuser }}"
+  become: true
+  become_method: sudo  
+
+#- name: Copy folder codec to to wildfly
+#  copy: src=codec dest=/{{serviceroot}}/{{ serviceuser }}/jboss-as/modules/system/layers/base owner={{ serviceuser }} group={{ serviceuser }} mode=0755
+#  become: true
+#  become_method: sudo
+
+- name: Extract codec to wildfly
+  unarchive:
+    src: codec.tar.gz
+    #src: wildfly-10.1.0.Final_sqlserverv15.tar.gz
+    dest: /{{serviceroot}}/{{ serviceuser }}/jboss-as/modules/system/layers/base
+    owner: "{{ serviceuser }}"
+    group: "{{ serviceuser }}"
+  become: true
+  become_method: sudo 
+
+#- name: Copy folder eoplugin to to wildfly
+#  copy: src=eoplugin dest=/{{serviceroot}}/{{ serviceuser }}/jboss-as/modules/system/layers/base owner={{ serviceuser }} group={{ serviceuser }} mode=0755
+#  become: true
+#  become_method: sudo
+
+- name: Extract eoplugin to wildfly
+  unarchive:
+    src: eoplugin.tar.gz
+    #src: wildfly-10.1.0.Final_sqlserverv15.tar.gz
+    dest: /{{serviceroot}}/{{ serviceuser }}/jboss-as/modules/system/layers/base
+    owner: "{{ serviceuser }}"
+    group: "{{ serviceuser }}"
+  become: true
+  become_method: sudo    
+
+######################## End
+
+# copy standalone-full.xml file to configuration folder
+- template:
+     src: standalone-full.xml
+     dest: /{{serviceroot}}/{{ serviceuser }}/jboss-as/standalone/configuration
+     owner: "{{ serviceuser }}"
+     group: "{{ serviceuser }}"
+  notify: restart jboss
+  become: true
+  become_method: sudo
+
+# copy standalone-conf.bat file to configuration folder
+- template:
+     src: standalone.conf
+     dest: /{{serviceroot}}/{{ serviceuser }}/jboss-as/bin
+     owner: "{{ serviceuser }}"
+     group: "{{ serviceuser }}"
+  become: true
+  become_method: sudo
+
+# copy standalone.sh file with JAVA_HOME set
+- template:
+     src: standalone.sh
+     dest: /{{serviceroot}}/{{ serviceuser }}/jboss-as/bin
+     owner: "{{ serviceuser }}"
+     group: "{{ serviceuser }}"
+  become: true
+  become_method: sudo  
+
+- template:
+     src: wildfly.j2
+     dest: /etc/init.d/wildfly
+     mode: 0755
+  become: true
+  become_method: sudo
+
+- name: Change ownership of JBoss installation
+  file: path=/{{serviceroot}}/{{ serviceuser }}/jboss-as/ owner={{ serviceuser }} group={{ serviceuser }} state=directory recurse=yes
+  become: true
+  become_method: sudo
+
+#- name: Copy the init script
+#  copy: src=wildfly-init-redhat.sh dest=/etc/init.d/jboss mode=0755
+
+- name: Enable JBoss to be started at boot
+  service: name=wildfly enabled=yes state=started 
+  become: true
+  become_method: sudo
+
+
+
+
+ 
+
+
+
+
+

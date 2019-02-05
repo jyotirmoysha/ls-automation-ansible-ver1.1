@@ -1,0 +1,18 @@
+---
+
+- debug:
+    msg: RAGE process Hello
+
+# Start jboss server
+#- name: execute shell script.
+#  command: sh /home/{{ serviceuser }}/jboss-as/bin/standalone.sh
+#  register: shell_result
+#  become: true
+#  become_method: sudo
+
+#- debug:
+#    var: shell_result.stdout_lines
+
+
+
+  

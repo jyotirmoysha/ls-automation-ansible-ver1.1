@@ -1,0 +1,83 @@
+---
+
+- debug:
+    msg: execute shell script to run jar to setup Rage processes
+
+
+- name: Extract JAVA 1.8.111
+  unarchive:
+    src: jdk-8u111-linux-x64.tar.gz
+    dest: /{{serviceroot}}/{{ serviceuser }}/
+    owner: "{{ serviceuser }}"
+    group: "{{ serviceuser }}"
+  become: true
+  become_method: sudo
+
+######## Added new for security
+- name: Copy file local_policy.jar specific to Rage to jdk
+  copy: src=local_policy.jar dest=/{{serviceroot}}/{{ serviceuser }}/jdk1.8.0_111/jre/lib/security  mode=0755
+  become: true
+  become_method: sudo
+
+- name: Copy file US_export_policy.jar specific to Rage to jdk
+  copy: src=US_export_policy.jar dest=/{{serviceroot}}/{{ serviceuser }}/jdk1.8.0_111/jre/lib/security  mode=0755
+  become: true
+  become_method: sudo
+
+######### End for security
+
+- command: "{{ item }}"
+  with_items:
+  - alternatives --install /usr/bin/java java /{{serviceroot}}/{{ serviceuser }}/jdk1.8.0_111/bin/java 2
+  - alternatives --set java /{{serviceroot}}/{{ serviceuser }}/jdk1.8.0_111/bin/java
+  become: true
+  become_method: sudo
+
+- template:
+     src: .bashrc.j2
+     dest: /{{serviceroot}}/{{ serviceuser }}/.bashrc
+     owner: "{{ serviceuser }}"
+     group: "{{ serviceuser }}"
+  become: true
+  become_method: sudo
+
+- name: Copy AutomationJarAndProp folder to a location
+  copy: src=AutomationJarAndProp dest=/{{serviceroot}}/{{ serviceuser }} mode=0755
+#  become: true
+#  become_method: sudo
+
+- template:
+     src: general.properties
+     dest: /{{serviceroot}}/{{ serviceuser }}/AutomationJarAndProp
+#     owner: "{{ serviceuser }}"
+#     group: "{{ password }}"
+  #delegate_to: localhost -- commented to execute on remote uncomment for local
+#  delegate_to: localhost
+#  become: true
+#  become_method: sudo
+
+- template:
+     src: startRageProcessSetup.sh
+     dest: /{{serviceroot}}/{{ serviceuser }}
+#     owner: "{{ serviceuser }}"
+#     group: "{{ password }}"
+  #delegate_to: localhost - commented to test on remote uncomment for local
+#  delegate_to: localhost
+#  become: true
+#  become_method: sudo
+
+- name: execute shell script.
+  #command: sh startRageProcessSetup.sh -- if it is on files folder
+  command: sh /{{serviceroot}}/{{ serviceuser }}/startRageProcessSetup.sh
+  register: shell_result
+#  become: true
+#  become_method: sudo
+
+- debug:
+    var: shell_result.stdout_lines
+
+
+#
+#
+#
+#

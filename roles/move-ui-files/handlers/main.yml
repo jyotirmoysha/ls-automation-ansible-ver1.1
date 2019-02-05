@@ -1,0 +1,13 @@
+---
+- name: restart tomcat
+  
+  #become: true
+  #become_method: sudo
+  #systemd: name=tomcat state=restarted daemon_reload=yes enabled=True
+  command: service tomcat restart
+  become: true
+  become_user: rage
+  become_method: sudo  
+
+- name: restart iptables
+  service: name=iptables state=restarted

@@ -1,0 +1,44 @@
+---
+
+- debug:
+    msg: Move Parser Files to App Server
+
+- name: add group "rage"
+  group: name={{ serviceuser }}
+  become: true
+  become_method: sudo
+
+#- name: Create User
+#  action: user name={{ serviceuser }} password={{ password }} update_password=always shell=/bin/bash home=/{{serviceroot}}/{{ serviceuser }}
+#  become: true
+#  become_method: sudo
+
+- name: Copy folder Parser_Scripts to App server
+  copy: src=Parser_Scripts dest=/{{serviceroot}}/{{ serviceuser }} mode=0755
+  become: true
+  become_method: sudo
+
+- template:
+     src: setenv.sh
+     dest: /{{serviceroot}}/{{ serviceuser }}
+     owner: "{{ serviceuser }}"
+     group: "{{ serviceuser }}"
+  become: true
+  become_method: sudo
+
+- template:
+     src: config.properties
+     dest: /{{serviceroot}}/{{ serviceuser }}/Parser_Scripts
+     owner: "{{ serviceuser }}"
+     group: "{{ serviceuser }}"
+  become: true
+  become_method: sudo
+
+# Start: Added on 24th Oct to change ownership of artefacts to rage instead of root
+- name: Change ownership of extraction Parser_Scripts artefacts
+  file: path=/{{serviceroot}}/{{ serviceuser }}/Parser_Scripts/ owner={{ serviceuser }} group={{ serviceuser }} state=directory recurse=yes
+  become: true
+  become_method: sudo
+
+# End: Added on 24th Oct to change ownership of artefacts to rage instead of root
+

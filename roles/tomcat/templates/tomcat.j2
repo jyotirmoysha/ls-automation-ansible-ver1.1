@@ -1,0 +1,42 @@
+#!/bin/bash
+# description: Tomcat Start Stop Restart Status
+# processname: tomcat
+# chkconfig: 234 20 80
+
+START_STATUS="Tomcat service running."
+STOP_STATUS="Tomcat service stopped."
+PROC_NAME="apache-tomcat-8.0.39"
+TOMCAT_HOME="/{{serviceroot}}/{{ serviceuser }}/apache-tomcat-8.0.39/bin"
+LOF_FILE="/{{serviceroot}}/{{ serviceuser }}/apache-tomcat-8.0.39/logs/catalina.out"
+
+start () {
+	su {{ serviceuser }} -c "sh $TOMCAT_HOME/startup.sh ; chmod 777 $LOF_FILE" ; echo "$START_STATUS" 
+}
+
+stop () {
+	su {{ serviceuser }} -c "sh $TOMCAT_HOME/shutdown.sh"
+}
+
+restart () {
+	stop
+        start
+}
+
+status () {
+if ps ax | grep -v grep | grep $PROC_NAME > /dev/null
+        then
+                echo "$START_STATUS"
+        else
+                echo "$STOP_STATUS"
+fi
+}
+
+case $1 in
+        start)   $1  ;;
+        stop)    $1  ;;
+        restart) $1  ;;
+        status)  $1  ;;
+        *) echo "Usage: $0 {start|stop|status|restart}"
+    esac
+exit 0
+

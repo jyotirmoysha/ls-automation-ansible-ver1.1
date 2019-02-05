@@ -1,0 +1,73 @@
+#mode: deploy
+mode: setup
+
+serviceuser: rage
+serviceroot: home
+password: R@ge1234
+jboss.home.dir: /home/rage/jboss-as
+wildflyartefactName: wildfly-10.1.0.Final.tar.gz
+wildflyfolderName: wildfly-10.1.0.Final
+####################### standalone-full.xml
+serverPort: 8081
+serveriport: 10.163.1.12_8081   # if no ip than provide sever node name
+jbossCategoryName: LSV4_SERVER1  # if no ip than provide sever node name
+serverIp: 10.163.1.12           # if no ip than provide sever node name
+
+dbServerIp: LVSAPOC-DB.database.windows.net      # Rage DB creentials
+dbusername: PLATFORM
+dbpassword: sdjv123vHDS@#HGV
+dbServerPort: 1433
+dbInstanceName: PLATFORM
+
+dbDriver: com.microsoft.sqlserver.jdbc.SQLServerDriver
+dbConnectionURL: jdbc:sqlserver://LVSAPOC-DB.database.windows.net:1433;databaseName=PLATFORM
+dbValidationQuery: select 1
+
+debugLevel: INFO
+
+#databaseNameSQL: TODOSQL
+
+############################### standalone.sh
+javaHome: /home/rage/jdk1.8.0_111
+
+########################### Parser Script: config.properties
+jdbcDriverName: net.sourceforge.jtds.jdbc.Driver
+
+databaseSourceUrl: jdbc:jtds:sqlserver://LVSAPOC-DB.database.windows.net:1433;databaseName=LIVESPREAD
+stagingUser: LIVESPREAD
+stagingPwd: sd098dvHDS@#HGV
+
+rageDatabaseSourceUrl: jdbc:jtds:sqlserver://capone-dev.chmvchfitsbc.us-east-1.rds.amazonaws.com:1433;databaseName=PLATFORM
+rageUser: PLATFORMDB
+ragePwd: sdjv123vHDS@#HGV
+
+commonParserLog: No
+
+mssqldbconnectiondriver101: com.microsoft.sqlserver.jdbc.SQLServerDriver
+mssqldbconnectionstring101: jdbc:sqlserver://capone-dev.chmvchfitsbc.us-east-1.rds.amazonaws.com;databaseName=LIVESPREAD
+mssqldbconnectionusername101: LIVESPREAD
+mssqldbconnectionpassword101: sd098dvHDS@#HGV
+
+############################## config.properties for LS_File SQL
+dbConnectionDriver: net.sourceforge.jtds.jdbc.Driver
+dbConnectionString: jdbc:jtds:sqlserver://LVSAPOC-DB.database.windows.net:1433;databaseName=LIVESPREAD
+dbConnectionUsername: LIVESPREAD
+dbconnectionpassword: sd098dvHDS@#HGV
+
+############################## util-service-server-config.properties for LS_File SQL for OCR
+listenerPort: 8088
+serviceHostSql: 172.25.2.207
+processPath: E:/OCR-Service-2.6/Process
+executableName: E:/OCR-Service-2.6/pdftotext.exe
+ocrExecutableName: E:/OCR-Service-2.6/OCR Executable/OCRDocument.exe
+
+############################## OCRDocument.sh for LS_File SQL for OCR
+MyOpsServerName: {MY_OPS_SERVER_NAME}
+
+############################## util-service-server-config.properties for FileConversion Linux OCR
+listenerPortLinux: 8089
+serviceHostLinux: 10.53.3.164
+processPathLinux: C:/FileConversionService/Process
+executableNameLinux: C:/FileConversionService/pdftotext.exe
+ocrExecutableNameLinux: C:/FileConversionService/OCR Executable/OCRDocument.exe
+

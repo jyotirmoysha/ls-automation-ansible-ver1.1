@@ -1,0 +1,5 @@
+---
+- name: restart jboss 
+  service: name=wildfly state=restarted
+  become: true
+  become_method: sudo

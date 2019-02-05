@@ -1,0 +1,14 @@
+---
+#serviceuser: rage
+#password: $6$rounds=656000$jMTsfkCLe6UvxQDf$w5qVoYgLdS.cp/x8VJiWgkCO/BTUpydIC1zPf1kmAuLnLkpgSoVdhs6rws43FSgWFse6WGmdkyCIHv0GeSUdP1 
+
+#serveriport: 172.20.13.21_8081
+#jbossCategoryName: 172.20.8.42 
+#serverIp: 172.20.8.42
+
+#dbusername: RAGEV15
+#dbpassword: R@gev_123
+
+#dbServerPort: 5021
+#dbInstanceName: RAGEV15
+

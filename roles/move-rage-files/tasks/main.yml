@@ -1,0 +1,95 @@
+---
+
+- debug:
+    msg: Move Extraction and other files to Rage Server
+
+- name: add group "rage"
+  group: name={{ serviceuser }}
+  become: true
+  become_method: sudo
+
+- name: Copy folder Parser_Scripts to Rage server
+  copy: src=Parser_Scripts dest=/{{serviceroot}}/{{ serviceuser }} mode=0755
+  become: true
+  become_method: sudo
+
+# copy config.properties file to Parser_Scripts folder. 
+- template:
+     src: config.properties
+     dest: /{{serviceroot}}/{{ serviceuser }}/Parser_Scripts
+     owner: "{{ serviceuser }}"
+     group: "{{ serviceuser }}"
+  become: true
+  become_method: sudo
+
+- template:
+     src: setenv.sh
+     dest: /{{serviceroot}}/{{ serviceuser }}
+     owner: "{{ serviceuser }}"
+     group: "{{ serviceuser }}"
+  become: true
+  become_method: sudo
+
+- name: Copy folder LS_File_Conversion-SQL to Rage server
+  copy: src=LS_File_Conversion dest=/{{serviceroot}}/{{ serviceuser }} mode=0755
+  become: true
+  become_method: sudo
+
+- template:
+     src: sql/config.properties
+     dest: /{{serviceroot}}/{{ serviceuser }}/LS_File_Conversion/config.properties
+     owner: "{{ serviceuser }}"
+     group: "{{ serviceuser }}"
+  become: true
+  become_method: sudo
+
+- template:
+     src: sql/util-service-server-config.properties
+     dest: /{{serviceroot}}/{{ serviceuser }}/LS_File_Conversion/util-service-server-config.properties
+     owner: "{{ serviceuser }}"
+     group: "{{ serviceuser }}"
+  become: true
+  become_method: sudo
+
+- template:
+     src: sql/OCRDocument.sh
+     dest: /{{serviceroot}}/{{ serviceuser }}/LS_File_Conversion/OCRDocument.sh
+     owner: "{{ serviceuser }}"
+     group: "{{ serviceuser }}"
+  become: true
+  become_method: sudo  
+
+- name: Copy folder FileConversionService_Linux to Rage server
+  copy: src=FileConversionService dest=/{{serviceroot}}/{{ serviceuser }} mode=0755
+  become: true
+  become_method: sudo
+
+- template:
+     src: linux/util-service-server-config.properties
+     dest: /{{serviceroot}}/{{ serviceuser }}/FileConversionService
+     owner: "{{ serviceuser }}"
+     group: "{{ serviceuser }}"
+  become: true
+  become_method: sudo
+
+# Start: Added on 24th Oct to change ownership of artefacts to rage instead of root
+- name: Change ownership of extraction Parser_Scripts artefacts
+  file: path=/{{serviceroot}}/{{ serviceuser }}/Parser_Scripts/ owner={{ serviceuser }} group={{ serviceuser }} state=directory recurse=yes
+  become: true
+  become_method: sudo
+
+- name: Change ownership of extraction artefacts
+  file: path=/{{serviceroot}}/{{ serviceuser }}/LS_File_Conversion/ owner={{ serviceuser }} group={{ serviceuser }} state=directory recurse=yes
+  become: true
+  become_method: sudo
+
+- name: Change ownership of extraction artefacts
+  file: path=/{{serviceroot}}/{{ serviceuser }}/FileConversionService/ owner={{ serviceuser }} group={{ serviceuser }} state=directory recurse=yes
+  become: true
+  become_method: sudo
+
+# End: Added on 24th Oct to change ownership of artefacts to rage instead of root
+
+
+
+

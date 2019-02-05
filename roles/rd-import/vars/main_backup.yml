@@ -1,0 +1,76 @@
+---
+#serviceuser: osboxes
+#password: osboxes.org
+
+serviceuser: rage
+password: rage
+
+host: 172.20.7.40
+port: 8086
+protocol: http
+
+############### Application Related Properties START
+##Application_Name;...
+applicationNamesCreate: LS_SUSHIL
+##ApplicationName,ApplicationDS_Name,DefaultProcessName;...
+applicationNamesUpdate: LS_SUSHIL,MBT_TRN_PRJ,StartUpProcess
+##Application_Name;...
+applicationNamesVerify: LS_SUSHIL
+##Application_Name;...
+applicationNamesDeploy: LS_SUSHIL
+#Application Related Properties END
+
+################ Application Related Properties END
+
+################ Datasource Related Properties START
+##datasourcename,datasourcetype,dbhost,dbport,schemaname,username,password,ApplicationName,Operation(CREATE,UPDATE,UPDATE,UPDATEREPOSITORY);...
+datasourceDetails: MBT_TRN_PRJ,SqlServer,172.20.1.43,54422,MBT_TRN_PRJ,MBTRN,mbtrn_123,LS_SUSHIL,CREATE;MBT_TRN_PRJ,SqlServer,172.20.1.43,54422,MBT_TRN_PRJ,MBTRN,mbtrn_123,LS_SUSHIL,UPDATEREPOSITORY
+
+################ Datasource Related Properties END
+
+#MailProfile Related Properties START
+##ProfileName,Host,Port,UserName,Password,AuthRequired,ProfileType,DefaultProfile(Y/N),FromId,Subject,EwsFlag,EwsSendBehalfPermission,ApplicationName,Operation(CREATE/UPDATE)
+mailProfileDetails: test,mail.creditpointe.com,586,cp.support@creditpointe.com,test,true,Send,Y,cp.support@creditpointe.com,Hello,true,true,LS_SUSHIL,CREATE
+#MailProfile Related Properties END
+
+#Export Related Properties START
+exportOutputFolder: D:/AFP/export/
+##ProcessName,ApplicationName;...
+exportProcesses: Addition,LS_SUSHIL;StartUpProcess,LS_SUSHIL
+#Export Related Properties END
+
+#Schedule Related Properties START
+##ScheduleDate(MM/dd/yyyy HH:mm:ss),ProcessName,ApplicationName,Unit(UNITS_MINUTES,UNITS_HOURS,UNITS_DAYS,UNITS_WEEKS,UNITS_MONTHS,UNITS_YEARS),Frequency;...
+scheduledatetime: 04/11/2018 10:15:00,Addition,LS_SUSHIL,UNITS_MINUTES,1
+#Schedule Related Properties End
+
+#Sequence related properties START
+##DatabaseName,SequenceName,SequenceNumber,DatabasePort,DatabaseIP,CacheSize,Operation(add/update/none),ExistingSeqName(if update),ExistingDatabaseIP(if update)
+sequences: RTS,QWERTY1,21,64275,172.20.1.133,1,add,LS01,172.20.1.43;RTS,QWERTY2,21,64275,172.20.1.133,1,add,LS02,172.20.1.43
+#Sequence related properties END
+
+
+#Verify related properties START
+##Process_Name1,Application_Name1;...
+verifyProcesses: Addition,LS_SUSHIL;Select,LS_SUSHIL
+#Verify related properties END
+
+#Deploy related properties START
+##Process_Name1,Application_Name1,Category;...
+deployProcesses: Addition,LS_SUSHIL,172.20.7.40;Select,LS_SUSHIL,172.20.7.40
+#Deploy related properties END
+
+#Import related properties START
+##ImportFilesPath,ApplicationName;...
+importxmlpath: C:\\Users\\ss0e1379\\Desktop\\ImportProcesses,LS_SUSHIL
+#Import related properties END
+
+rageLogFilePathWithName: rage.log
+utilityLogFilePathWithName: utility.log
+
+
+
+
+
+
+

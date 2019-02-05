@@ -1,0 +1,17 @@
+---
+#This playbook orchestrates installation of tomcat, web application, wildfly and rage processes
+
+#1st Step: Setup  wildfly and RAGE deploy and setup
+- hosts: rage-process
+  roles:
+    - rage-process
+
+#2nd Step: Setup  Tomcat and Web Application deploy and setup
+- hosts: web-application
+  roles:
+    - web-application
+
+#3rd Step: Will create rage application, datasource, verify, update, import process xmls etc.
+- hosts: rd-import
+  roles:
+    - rd-import

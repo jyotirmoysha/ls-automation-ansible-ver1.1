@@ -1,0 +1,8 @@
+[web-application]
+web-node1 ansible_host=10.163.1.11 ansible_user=rage ansible_ssh_pass=R@ge1234
+
+[rage-process]
+rage-node1 ansible_host=10.163.1.12 ansible_user=rage ansible_ssh_pass=R@ge1234
+
+[rd-import]
+localhost-node1 ansible_host=10.163.1.13 ansible_user=rage ansible_ssh_pass=R@ge1234

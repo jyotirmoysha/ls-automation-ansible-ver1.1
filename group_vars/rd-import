@@ -1,0 +1,35 @@
+---
+serviceuser: rage
+serviceroot: home
+password: R@ge1234
+
+host: 10.163.1.12
+port: 8081
+protocol: http
+
+############### Application Related Properties START
+applicationNamesCreate: LIVESPREAD
+datasourcetype: SqlServer
+dbhost: LVSAPOC-DB.database.windows.net
+dbport: 1433
+
+appnDataSource: LIVESPREAD
+appnDBName: LIVESPREAD
+appnDBUser: LIVESPREAD
+appnDBpwd: sd098dvHDS@#HGV
+
+rageDataSource: PLATFORMDB
+rageDBName: PLATFORM
+rageDBUser: PLATFORMDB
+rageDBpwd: sdjv123vHDS@#HGV
+
+##ScheduleDate(MM/dd/yyyy HH:mm:ss)
+scheduledatetimeProcessMultiGenericProcess: 12/12/2018 12:12:12
+scheduledatetimeProcessIdentifyUpldProcess: 12/12/2018 14:14:14
+
+ExistingDatabaseIP: 0.0.0.0
+importxmlpath: /home/rage/Rage_Process_XML
+serverCategory: LSV4_SERVER1
+
+############### Application Related Properties END
+
